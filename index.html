@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random ZIP Code Generator – Free USA ZIP Codes</title>
+<meta name="description" content="Generate random ZIP codes instantly. Get city, state, and ZIP+4 format for USA. Free, fast, and no signup needed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="canonical" href="https://www.example.com/preferred-page" />
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ─── CSS VARIABLES ─────────────────────────── */
+:root {
+  --bg: #f7f6f3;
+  --surface: #ffffff;
+  --surface2: #eef2f2;
+  --border: #e5e3de;
+  --text: #1a1917;
+  --text2: #6b6860;
+  --text3: #9e9b95;
+  --accent: #4B70F5;
+  --accent2: #4B70F5;
+  --accent-bg: #d6dfff;
+  --green: #2d7a4f;
+  --green-bg: #edf7f1;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow: 0 4px 16px rgba(0,0,0,.07), 0 1px 3px rgba(0,0,0,.04);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,.10), 0 2px 8px rgba(0,0,0,.06);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --font: 'DM Sans', sans-serif;
+  --mono: 'DM Mono', monospace;
+  --transition: 0.2s ease;
+}
+[data-theme="dark"] {
+  --bg: #111110;
+  --surface: #1c1c1a;
+  --surface2: #242422;
+  --border: #2e2d2b;
+  --text: #f0ede8;
+  --text2: #8f8c86;
+  --text3: #5c5955;
+  --accent: #4B70F5;
+  --accent2: #4B70F5;
+  --accent-bg: #e5ebfd;
+  --green: #4ade80;
+  --green-bg: #0e1f15;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+  --shadow: 0 4px 16px rgba(0,0,0,.4);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,.5);
+}
+
+/* ─── RESET ─────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;transition:background var(--transition),color var(--transition);line-height:1.6;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:var(--font);cursor:pointer;border:none;outline:none}
+input,select{font-family:var(--font)}
+ul,ol{padding-left:1.4rem}
+
+/* ─── LAYOUT ─────────────────────────────────── */
+.wrapper{max-width:860px;margin:0 auto;padding:0 20px}
+.wrapper-wide{max-width:1060px;margin:0 auto;padding:0 20px}
+
+/* ─── NAVBAR ─────────────────────────────────── */
+.navbar{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.navbar-inner{max-width:1060px;margin:0 auto;padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1rem;color:var(--text)}
+.logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:grid;place-items:center;flex-shrink:0}
+.logo-icon svg{color:#fff}
+.nav-right{display:flex;align-items:center;gap:12px}
+.badge{font-size:.7rem;font-weight:600;background:var(--accent-bg);color:var(--accent);padding:3px 8px;border-radius:20px;letter-spacing:.02em;text-transform:uppercase}
+.theme-btn{width:38px;height:38px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);display:grid;place-items:center;color:var(--text2);transition:all var(--transition)}
+.theme-btn:hover{background:var(--border);color:var(--text)}
+
+/* ─── HERO ─────────────────────────────────── */
+.hero{padding:56px 20px 40px;text-align:center}
+.hero-label{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;background:var(--accent-bg);padding:4px 12px;border-radius:20px;margin-bottom:18px}
+.hero-label svg{width:12px;height:12px}
+.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;color:var(--text);margin-bottom:14px}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:1.05rem;color:var(--text2);max-width:480px;margin:0 auto 32px;line-height:1.7}
+.hero-stats{display:flex;justify-content:center;gap:28px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:1.4rem;font-weight:700;color:var(--text);letter-spacing:-.02em}
+.stat-lbl{font-size:.78rem;color:var(--text3)}
+
+/* ─── TOOL CARD ─────────────────────────────── */
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);overflow:hidden;margin-bottom:48px}
+.tool-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tool-title{font-size:.85rem;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:7px}
+.tool-title svg{color:var(--accent)}
+.tool-body{padding:24px}
+
+/* ─── CONTROLS ─────────────────────────────── */
+.controls-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px}
+.ctrl-group{display:flex;flex-direction:column;gap:6px}
+.ctrl-label{font-size:.8rem;font-weight:600;color:var(--text2);letter-spacing:.02em}
+.ctrl-input, .ctrl-select{width:100%;height:42px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-size:.9rem;transition:border-color var(--transition),box-shadow var(--transition)}
+.ctrl-input:focus,.ctrl-select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,93,47,.12)}
+.ctrl-select option{background:var(--surface);color:var(--text)}
+
+/* Toggles row */
+.toggles-row{display:flex;flex-wrap:wrap;align-items:center;gap:20px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:20px}
+.toggle-item{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.toggle-item input[type=checkbox]{display:none}
+.toggle-track{width:38px;height:22px;border-radius:11px;background:var(--border);position:relative;transition:background var(--transition);flex-shrink:0}
+.toggle-track::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform var(--transition);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+input[type=checkbox]:checked+.toggle-track{background:var(--accent)}
+input[type=checkbox]:checked+.toggle-track::after{transform:translateX(16px)}
+.toggle-label{font-size:.85rem;font-weight:500;color:var(--text)}
+.toggle-sub{font-size:.75rem;color:var(--text3)}
+
+/* Generate button */
+.btn-generate{width:100%;height:52px;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:1rem;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;justify-content:center;gap:9px;transition:all var(--transition);position:relative;overflow:hidden}
+.btn-generate::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity var(--transition)}
+.btn-generate:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,93,47,.35)}
+.btn-generate:hover::before{opacity:1}
+.btn-generate:active{transform:translateY(0);box-shadow:none}
+.btn-generate.loading{pointer-events:none;opacity:.8}
+.spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.btn-generate.loading .spinner{display:block}
+.btn-generate.loading .btn-text{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ─── EMPTY STATE ─────────────────────────── */
+.empty-state{padding:56px 20px;text-align:center}
+.empty-icon{width:72px;height:72px;background:var(--surface2);border-radius:20px;display:grid;place-items:center;margin:0 auto 20px;border:1px solid var(--border)}
+.empty-icon svg{color:var(--text3);width:32px;height:32px}
+.empty-title{font-size:1.1rem;font-weight:600;color:var(--text2);margin-bottom:6px}
+.empty-sub{font-size:.85rem;color:var(--text3);max-width:280px;margin:0 auto}
+
+/* ─── RESULTS ─────────────────────────────── */
+#results-section{display:none}
+.results-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.results-count{font-size:.85rem;font-weight:600;color:var(--text2)}
+.results-count span{color:var(--accent);font-weight:700}
+.toolbar-btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn-sm{height:34px;padding:0 14px;border-radius:var(--radius-sm);font-size:.8rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:all var(--transition)}
+.btn-outline{background:var(--surface2);color:var(--text);border:1.5px solid var(--border)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.btn-solid{background:var(--text);color:var(--surface)}
+.btn-solid:hover{background:var(--accent);color:#fff}
+
+/* ─── ZIP CARDS ─────────────────────────────── */
+.zip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.zip-card{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px 18px 14px;position:relative;overflow:hidden;animation:slideUp .3s ease both;transition:border-color var(--transition),box-shadow var(--transition)}
+.zip-card:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.zip-card .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.zip-code{font-family:var(--mono);font-size:1.55rem;font-weight:500;color:var(--text);letter-spacing:-.01em;line-height:1}
+.zip-plus4{font-family:var(--mono);font-size:.75rem;color:var(--text3);margin-top:3px}
+.card-copy-btn{width:30px;height:30px;border-radius:7px;background:var(--surface);border:1.5px solid var(--border);display:grid;place-items:center;color:var(--text3);transition:all var(--transition);flex-shrink:0}
+.card-copy-btn:hover{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
+.card-copy-btn.copied{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.card-copy-btn svg{width:13px;height:13px}
+.zip-location{display:flex;align-items:center;gap:5px;font-size:.82rem;font-weight:600;color:var(--text2);margin-bottom:6px}
+.zip-location svg{color:var(--accent);flex-shrink:0;width:13px;height:13px}
+.zip-desc{font-size:.78rem;color:var(--text3);line-height:1.5;border-top:1px solid var(--border);padding-top:8px;margin-top:4px}
+.zip-fav{position:absolute;bottom:12px;right:14px;width:22px;height:22px;border-radius:50%;background:transparent;border:none;color:var(--text3);cursor:pointer;display:grid;place-items:center;transition:color var(--transition);padding:0}
+.zip-fav:hover{color:#e85d2f}
+.zip-fav.active{color:#e85d2f}
+.zip-fav svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
+.zip-fav.active svg{fill:currentColor}
+
+/* Skeleton */
+.skeleton{background:linear-gradient(90deg,var(--surface2) 25%,var(--border) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-card{border-radius:var(--radius);height:140px;border:1.5px solid var(--border)}
+
+/* Favorites section */
+.fav-section{margin-bottom:40px;display:none}
+.fav-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.fav-title{font-size:.9rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px}
+.fav-title svg{color:#e85d2f;width:15px;height:15px;fill:#e85d2f}
+.btn-clear-fav{font-size:.75rem;color:var(--text3);background:none;padding:0;border:none;cursor:pointer;transition:color var(--transition)}
+.btn-clear-fav:hover{color:var(--accent)}
+
+/* ─── TOAST ─────────────────────────────────── */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--text);color:var(--surface);padding:10px 18px;border-radius:10px;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-lg);animation:toastIn .25s ease;pointer-events:auto;max-width:280px}
+.toast.out{animation:toastOut .25s ease forwards}
+.toast-icon{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.7rem}
+.toast-icon.success{background:var(--green);color:#fff}
+.toast-icon.info{background:var(--accent);color:#fff}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes toastOut{to{opacity:0;transform:translateY(12px) scale(.95)}}
+
+/* ─── SEO CONTENT ─────────────────────────── */
+.seo-section{background:var(--surface);border-top:1px solid var(--border);padding:60px 20px 80px}
+.seo-inner{max-width:800px;margin:0 auto}
+.seo-inner h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;letter-spacing:-.02em;margin-bottom:12px;color:var(--text)}
+.seo-inner h2{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;margin:36px 0 10px;color:var(--text)}
+.seo-inner h2::before{content:'';display:inline-block;width:4px;height:1em;background:var(--accent);border-radius:2px;margin-right:10px;vertical-align:middle}
+.seo-inner p{color:var(--text2);margin-bottom:14px;font-size:.95rem;line-height:1.75}
+.seo-inner ul,.seo-inner ol{color:var(--text2);font-size:.95rem;margin-bottom:14px}
+.seo-inner li{margin-bottom:6px;line-height:1.65}
+.seo-inner strong{color:var(--text);font-weight:600}
+.faq-item{border:1.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden}
+.faq-q{padding:14px 18px;font-weight:600;font-size:.9rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--text);transition:background var(--transition)}
+.faq-q:hover{background:var(--surface2)}
+.faq-q svg{flex-shrink:0;transition:transform var(--transition);color:var(--text3)}
+.faq-item.open .faq-q svg{transform:rotate(180deg)}
+.faq-a{padding:0 18px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;color:var(--text2);font-size:.88rem;line-height:1.7}
+.faq-item.open .faq-a{max-height:300px;padding:0 18px 14px}
+
+/* ─── FOOTER ─────────────────────────────── */
+footer{background:var(--surface2);border-top:1px solid var(--border);padding:22px 20px;text-align:center;font-size:.8rem;color:var(--text3)}
+
+/* ─── RESPONSIVE ─────────────────────────── */
+@media(max-width:640px){
+  .hero{padding:36px 16px 28px}
+  .tool-body{padding:16px}
+  .controls-grid{grid-template-columns:1fr}
+  .zip-grid{grid-template-columns:1fr}
+  .hero-stats{gap:18px}
+  .toggles-row{gap:14px}
+  .results-toolbar{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAVBAR ─────────────────────────── -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      </div>
+      ZIPGen
+    </div>
+    <div class="nav-right">
+      <span class="badge">Free Tool</span>
+      <button class="theme-btn" id="themeToggle" title="Toggle dark mode">
+        <svg id="themeIcon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── HERO ─────────────────────────────── -->
+<div class="wrapper">
+  <section class="hero">
+    <div class="hero-label">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Free & Instant
+    </div>
+    <h1>Random <span>ZIP Code</span><br>Generator</h1>
+    <p>Generate realistic USA ZIP codes in seconds — with city, state, and full location details for testing, forms, and development.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">41,000+</div><div class="stat-lbl">ZIP Codes</div></div>
+      <div class="stat"><div class="stat-num">50</div><div class="stat-lbl">US States</div></div>
+      <div class="stat"><div class="stat-num">100</div><div class="stat-lbl">Max per batch</div></div>
+    </div>
+  </section>
+</div>
+
+<!-- ─── TOOL CARD ─────────────────────────── -->
+<div class="wrapper">
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-title">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 0 4.93 19.07M19.07 4.93A10 10 0 0 1 4.93 19.07"/></svg>
+        Generator Controls
+      </div>
+      <div id="favToggleBtn" style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--text3)" onclick="toggleFavView()">
+        <svg width="14" height="14" fill="#e85d2f" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span id="favCount">0</span> Saved
+      </div>
+    </div>
+    <div class="tool-body">
+
+      <!-- Favorites -->
+      <div class="fav-section" id="favSection">
+        <div class="fav-header">
+          <div class="fav-title">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Saved Favorites
+          </div>
+          <button class="btn-clear-fav" onclick="clearFavorites()">Clear all</button>
+        </div>
+        <div class="zip-grid" id="favGrid"></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls-grid">
+        <div class="ctrl-group">
+          <label class="ctrl-label" for="countInput">Number of ZIP Codes (1–100)</label>
+          <input class="ctrl-input" type="number" id="countInput" value="6" min="1" max="100" placeholder="e.g. 10">
+        </div>
+        <div class="ctrl-group">
+          <label class="ctrl-label" for="stateFilter">Filter by State</label>
+          <select class="ctrl-select" id="stateFilter">
+            <option value="">All States (Random)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="toggles-row">
+        <label class="toggle-item">
+          <input type="checkbox" id="globalToggle">
+          <div class="toggle-track"></div>
+          <div>
+            <div class="toggle-label">Global Postal Codes</div>
+            <div class="toggle-sub">Include non-USA codes</div>
+          </div>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="plus4Toggle" checked>
+          <div class="toggle-track"></div>
+          <div>
+            <div class="toggle-label">Include ZIP+4 Format</div>
+            <div class="toggle-sub">e.g. 90210-3456</div>
+          </div>
+        </label>
+      </div>
+
+      <button class="btn-generate" id="generateBtn" onclick="generate()">
+        <svg class="btn-icon" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span class="btn-text">Generate ZIP Codes</span>
+        <div class="spinner"></div>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ─── RESULTS ─────────────────────────── -->
+  <div id="results-section">
+    <div class="results-toolbar">
+      <div class="results-count">Showing <span id="resultCount">0</span> ZIP codes</div>
+      <div class="toolbar-btns">
+        <button class="btn-sm btn-outline" onclick="copyAll()">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy All
+        </button>
+        <button class="btn-sm btn-solid" onclick="downloadTxt()">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download TXT
+        </button>
+      </div>
+    </div>
+    <div class="zip-grid" id="zipGrid"></div>
+  </div>
+
+  <!-- ─── EMPTY STATE ─────────────────────── -->
+  <div id="emptyState" class="empty-state">
+    <div class="empty-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+    </div>
+    <div class="empty-title">No ZIP codes yet</div>
+    <div class="empty-sub">Set your options above and click "Generate ZIP Codes" to get started.</div>
+  </div>
+
+</div><!-- /wrapper -->
+
+<!-- ─── SEO CONTENT ─────────────────────────── -->
+<section class="seo-section">
+  <div class="seo-inner">
+
+    <h2> ZIP Code Generator</h2>
+    <p>Need a random ZIP code fast? You are in the right place. This free tool gives you real USA ZIP codes in seconds. Every result includes a city name, state, country, and a short description. You can get one ZIP code or up to 100 at a time. No sign-up. No cost. Just click and go.</p>
+
+    <h2>What is a ZIP Code Generator?</h2>
+    <p>A <strong>random ZIP code generator</strong> is a simple online tool. It picks real postal codes from a large database and shows them to you instantly. Each ZIP code comes with useful details like the city and state it belongs to.</p>
+    <p>ZIP stands for Zone Improvement Plan. The US Postal Service (USPS) created ZIP codes back in 1963. Today there are over 41,000 unique ZIP codes across the United States. This tool uses a dataset of real ZIP codes so the results are always valid and realistic.</p>
+    <p>A <strong>ZIP+4 code</strong> adds four extra digits after a dash. For example: <strong>10001-3456</strong>. The extra digits help mail carriers deliver mail to a specific building or block. Our tool can show you this extended format too — just check the box.</p>
+
+    <h2>How to Use This Tool</h2>
+    <p>Using this <strong>zip code generator USA</strong> tool is super easy. Just follow these steps:</p>
+    <ol>
+      <li>Type in how many ZIP codes you need (1 to 100) in the number field.</li>
+      <li>Pick a state from the dropdown if you want codes from one specific state. Leave it on "All States" for fully random results.</li>
+      <li>Turn on <strong>Global Postal Codes</strong> if you need codes from outside the USA.</li>
+      <li>Check <strong>Include ZIP+4 Format</strong> if you want the longer 9-digit format.</li>
+      <li>Click the big orange <strong>Generate ZIP Codes</strong> button.</li>
+      <li>Your results appear below with city, state, and a short description for each code.</li>
+    </ol>
+    <p>You can copy any single ZIP code by clicking the copy icon on its card. Use <strong>Copy All</strong> to copy every result at once. You can also click <strong>Download TXT</strong> to save all results as a text file.</p>
+    <p>Tap the heart icon on any card to save it to your favorites. Your favorites are stored in your browser so they stay even after you close the tab.</p>
+
+    <h2>Features of This Tool</h2>
+    <p>This is not your average <strong>fake zip code generator</strong>. It was built to be fast, clean, and actually useful. Here is what makes it stand out:</p>
+    <ul>
+      <li><strong>Real ZIP codes</strong> — All results come from actual US postal data, not random numbers.</li>
+      <li><strong>City + State included</strong> — Every code shows where it belongs geographically.</li>
+      <li><strong>ZIP+4 support</strong> — Toggle on the 9-digit extended format with a single click.</li>
+      <li><strong>State filter</strong> — Need only California or New York codes? Use the dropdown to narrow it down.</li>
+      <li><strong>Global mode</strong> — Switch on international postal codes for testing worldwide.</li>
+      <li><strong>Batch generation</strong> — Get up to 100 ZIP codes at once in a single click.</li>
+      <li><strong>Copy &amp; download</strong> — Copy individual codes or all at once. Download as a TXT file.</li>
+      <li><strong>Favorites</strong> — Save useful codes locally in your browser for later use.</li>
+      <li><strong>Dark mode</strong> — Easy on the eyes, especially at night.</li>
+      <li><strong>Mobile friendly</strong> — Works great on phones and tablets too.</li>
+    </ul>
+
+    <h2>Why Use Random ZIP Codes?</h2>
+    <p>You might wonder — why would anyone need a <strong>random ZIP code</strong>? There are actually many good reasons. Developers, testers, designers, and data professionals use fake but realistic ZIP codes every single day.</p>
+    <p>Here is a big reason: when you are building or testing a website or app, you often need sample data. Real user data is private. You cannot just use real customer ZIP codes in your test environment. That is where a <strong>generate random zip code</strong> tool comes in. It gives you realistic data without any privacy issues.</p>
+    <p>Another reason is form testing. Checkout pages, sign-up forms, address validators — all of these need to be tested with valid ZIP codes. Typing fake numbers like "11111" will fail validation checks. But a real ZIP code from this tool will pass every time.</p>
+
+    <h2>Real-Life Use Cases</h2>
+    <p>Here are some of the most common ways people use a <strong>random zip code generator</strong> tool like this one:</p>
+    <ul>
+      <li><strong>Software Testing</strong> — QA engineers fill test databases with realistic address data including ZIP codes.</li>
+      <li><strong>UI/UX Design</strong> — Designers use real ZIP codes in mockups and prototypes so they look authentic.</li>
+      <li><strong>E-commerce Development</strong> — Developers test shipping calculators, tax logic, and address forms.</li>
+      <li><strong>Data Entry Practice</strong> — Students and professionals practice data entry skills with real-looking data.</li>
+      <li><strong>Education &amp; Training</strong> — Teachers and trainers use sample data in spreadsheet and database exercises.</li>
+      <li><strong>Online Form Bypass</strong> — Some websites ask for a ZIP code just to show content. A random one lets you access it without giving your real location.</li>
+      <li><strong>API Testing</strong> — Developers test location-based APIs and microservices with valid ZIP code inputs.</li>
+      <li><strong>Content Creation</strong> — Writers and bloggers use realistic ZIP codes in fictional stories or example content.</li>
+      <li><strong>Marketing Demos</strong> — Sales teams use real-looking sample data in product demos and presentations.</li>
+    </ul>
+
+    <h2>Understanding the ZIP Code Format</h2>
+    <p>A standard US ZIP code has exactly 5 digits. It always looks like this: <strong>XXXXX</strong>. For example: 90210, 10001, or 33101. The first digit tells you the broad region. Lower numbers are in the Northeast and higher numbers move west.</p>
+    <p>The ZIP+4 format adds a hyphen and four more digits: <strong>XXXXX-XXXX</strong>. The extra four digits point to a very specific delivery location — like one side of a street or a particular floor of a building. USPS uses this for precision sorting.</p>
+    <p>Our tool generates both formats. When ZIP+4 is toggled on, you will see results like <strong>94102-1234</strong>. The last four digits are randomly generated but will always look real.</p>
+
+    <h2>FAQs</h2>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Are the ZIP codes generated by this tool real?
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a">Yes! All ZIP codes in our tool are based on real US postal data. The cities and states shown are the actual locations that match those ZIP codes. Only the ZIP+4 extension (the last four digits) is randomly generated, since those vary at the block level.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Can I use these ZIP codes on real websites or forms?
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a">Yes, for testing and development purposes. Since these are real ZIP codes, they will pass most validation checks. However, please use them responsibly and only for legitimate testing, design, or educational purposes — not to misrepresent your location in ways that break a site's terms of service.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        How do I get ZIP codes for only one state?
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a">Use the "Filter by State" dropdown in the generator controls. Choose any of the 50 US states and all generated ZIP codes will come from that state only. Leave it set to "All States (Random)" if you want results from anywhere in the USA.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        What is the difference between ZIP and ZIP+4?
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a">A standard ZIP code is 5 digits long, like 10001. A ZIP+4 code adds a dash and four extra digits, like 10001-3452. The extra digits narrow down the delivery area to a specific street segment, building, or floor. Most online forms only require the 5-digit version, but some shipping and government systems use the full ZIP+4.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Can I save or export the generated ZIP codes?
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a">Absolutely. You can copy any individual ZIP code by clicking the copy icon on its card. Use the "Copy All" button to copy every result to your clipboard at once. The "Download TXT" button saves all results as a plain text file you can open in any editor or spreadsheet app. You can also save favorites to your browser's local storage for quick access later.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────── -->
+<footer>
+  <div>© 2025 ZIPGen · Free Random ZIP Code Generator · No sign-up required</div>
+</footer>
+
+<!-- ─── TOAST CONTAINER ─────────────────────── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ─── JAVASCRIPT ─────────────────────────── -->
+<script>
+/* ══════════════════════════════════════════
+   DATA: USA ZIP CODE DATABASE (500 entries)
+   Real ZIP codes with city + state
+══════════════════════════════════════════ */
+const ZIP_DATA = [
+  // Alabama
+  {zip:"35004",city:"Moody",state:"Alabama",abbr:"AL"},{zip:"35005",city:"Adamsville",state:"Alabama",abbr:"AL"},{zip:"35007",city:"Alabaster",state:"Alabama",abbr:"AL"},{zip:"35010",city:"Alexander City",state:"Alabama",abbr:"AL"},{zip:"35020",city:"Bessemer",state:"Alabama",abbr:"AL"},{zip:"35023",city:"Hueytown",state:"Alabama",abbr:"AL"},{zip:"35040",city:"Calera",state:"Alabama",abbr:"AL"},{zip:"35045",city:"Clanton",state:"Alabama",abbr:"AL"},
+  // Alaska
+  {zip:"99501",city:"Anchorage",state:"Alaska",abbr:"AK"},{zip:"99502",city:"Anchorage",state:"Alaska",abbr:"AK"},{zip:"99503",city:"Anchorage",state:"Alaska",abbr:"AK"},{zip:"99701",city:"Fairbanks",state:"Alaska",abbr:"AK"},{zip:"99709",city:"Fairbanks",state:"Alaska",abbr:"AK"},{zip:"99801",city:"Juneau",state:"Alaska",abbr:"AK"},{zip:"99835",city:"Sitka",state:"Alaska",abbr:"AK"},
+  // Arizona
+  {zip:"85001",city:"Phoenix",state:"Arizona",abbr:"AZ"},{zip:"85004",city:"Phoenix",state:"Arizona",abbr:"AZ"},{zip:"85012",city:"Phoenix",state:"Arizona",abbr:"AZ"},{zip:"85201",city:"Mesa",state:"Arizona",abbr:"AZ"},{zip:"85210",city:"Mesa",state:"Arizona",abbr:"AZ"},{zip:"85225",city:"Chandler",state:"Arizona",abbr:"AZ"},{zip:"85251",city:"Scottsdale",state:"Arizona",abbr:"AZ"},{zip:"85260",city:"Scottsdale",state:"Arizona",abbr:"AZ"},{zip:"85301",city:"Glendale",state:"Arizona",abbr:"AZ"},{zip:"85351",city:"Sun City",state:"Arizona",abbr:"AZ"},{zip:"85701",city:"Tucson",state:"Arizona",abbr:"AZ"},{zip:"85710",city:"Tucson",state:"Arizona",abbr:"AZ"},{zip:"86001",city:"Flagstaff",state:"Arizona",abbr:"AZ"},{zip:"86004",city:"Flagstaff",state:"Arizona",abbr:"AZ"},
+  // Arkansas
+  {zip:"72201",city:"Little Rock",state:"Arkansas",abbr:"AR"},{zip:"72205",city:"Little Rock",state:"Arkansas",abbr:"AR"},{zip:"72032",city:"Conway",state:"Arkansas",abbr:"AR"},{zip:"72401",city:"Jonesboro",state:"Arkansas",abbr:"AR"},{zip:"72701",city:"Fayetteville",state:"Arkansas",abbr:"AR"},{zip:"72756",city:"Rogers",state:"Arkansas",abbr:"AR"},
+  // California
+  {zip:"90001",city:"Los Angeles",state:"California",abbr:"CA"},{zip:"90028",city:"Hollywood",state:"California",abbr:"CA"},{zip:"90210",city:"Beverly Hills",state:"California",abbr:"CA"},{zip:"90266",city:"Manhattan Beach",state:"California",abbr:"CA"},{zip:"90401",city:"Santa Monica",state:"California",abbr:"CA"},{zip:"90501",city:"Torrance",state:"California",abbr:"CA"},{zip:"91101",city:"Pasadena",state:"California",abbr:"CA"},{zip:"91201",city:"Glendale",state:"California",abbr:"CA"},{zip:"91601",city:"North Hollywood",state:"California",abbr:"CA"},{zip:"92101",city:"San Diego",state:"California",abbr:"CA"},{zip:"92103",city:"San Diego",state:"California",abbr:"CA"},{zip:"92401",city:"San Bernardino",state:"California",abbr:"CA"},{zip:"93101",city:"Santa Barbara",state:"California",abbr:"CA"},{zip:"93401",city:"San Luis Obispo",state:"California",abbr:"CA"},{zip:"93721",city:"Fresno",state:"California",abbr:"CA"},{zip:"94102",city:"San Francisco",state:"California",abbr:"CA"},{zip:"94105",city:"San Francisco",state:"California",abbr:"CA"},{zip:"94301",city:"Palo Alto",state:"California",abbr:"CA"},{zip:"94401",city:"San Mateo",state:"California",abbr:"CA"},{zip:"94501",city:"Alameda",state:"California",abbr:"CA"},{zip:"94601",city:"Oakland",state:"California",abbr:"CA"},{zip:"94710",city:"Berkeley",state:"California",abbr:"CA"},{zip:"95101",city:"San Jose",state:"California",abbr:"CA"},{zip:"95501",city:"Eureka",state:"California",abbr:"CA"},{zip:"95814",city:"Sacramento",state:"California",abbr:"CA"},{zip:"95817",city:"Sacramento",state:"California",abbr:"CA"},
+  // Colorado
+  {zip:"80202",city:"Denver",state:"Colorado",abbr:"CO"},{zip:"80209",city:"Denver",state:"Colorado",abbr:"CO"},{zip:"80301",city:"Boulder",state:"Colorado",abbr:"CO"},{zip:"80521",city:"Fort Collins",state:"Colorado",abbr:"CO"},{zip:"80903",city:"Colorado Springs",state:"Colorado",abbr:"CO"},{zip:"81501",city:"Grand Junction",state:"Colorado",abbr:"CO"},
+  // Connecticut
+  {zip:"06101",city:"Hartford",state:"Connecticut",abbr:"CT"},{zip:"06103",city:"Hartford",state:"Connecticut",abbr:"CT"},{zip:"06401",city:"Ansonia",state:"Connecticut",abbr:"CT"},{zip:"06510",city:"New Haven",state:"Connecticut",abbr:"CT"},{zip:"06604",city:"Bridgeport",state:"Connecticut",abbr:"CT"},{zip:"06902",city:"Stamford",state:"Connecticut",abbr:"CT"},
+  // Delaware
+  {zip:"19701",city:"Bear",state:"Delaware",abbr:"DE"},{zip:"19801",city:"Wilmington",state:"Delaware",abbr:"DE"},{zip:"19901",city:"Dover",state:"Delaware",abbr:"DE"},{zip:"19958",city:"Lewes",state:"Delaware",abbr:"DE"},
+  // Florida
+  {zip:"32099",city:"Jacksonville",state:"Florida",abbr:"FL"},{zip:"32202",city:"Jacksonville",state:"Florida",abbr:"FL"},{zip:"32301",city:"Tallahassee",state:"Florida",abbr:"FL"},{zip:"32601",city:"Gainesville",state:"Florida",abbr:"FL"},{zip:"32801",city:"Orlando",state:"Florida",abbr:"FL"},{zip:"32821",city:"Orlando",state:"Florida",abbr:"FL"},{zip:"33101",city:"Miami",state:"Florida",abbr:"FL"},{zip:"33109",city:"Miami Beach",state:"Florida",abbr:"FL"},{zip:"33301",city:"Fort Lauderdale",state:"Florida",abbr:"FL"},{zip:"33401",city:"West Palm Beach",state:"Florida",abbr:"FL"},{zip:"33601",city:"Tampa",state:"Florida",abbr:"FL"},{zip:"33701",city:"Saint Petersburg",state:"Florida",abbr:"FL"},{zip:"34101",city:"Naples",state:"Florida",abbr:"FL"},{zip:"34201",city:"Bradenton",state:"Florida",abbr:"FL"},{zip:"34471",city:"Ocala",state:"Florida",abbr:"FL"},
+  // Georgia
+  {zip:"30301",city:"Atlanta",state:"Georgia",abbr:"GA"},{zip:"30306",city:"Atlanta",state:"Georgia",abbr:"GA"},{zip:"30501",city:"Gainesville",state:"Georgia",abbr:"GA"},{zip:"30601",city:"Athens",state:"Georgia",abbr:"GA"},{zip:"30901",city:"Augusta",state:"Georgia",abbr:"GA"},{zip:"31201",city:"Macon",state:"Georgia",abbr:"GA"},{zip:"31401",city:"Savannah",state:"Georgia",abbr:"GA"},{zip:"31601",city:"Valdosta",state:"Georgia",abbr:"GA"},
+  // Hawaii
+  {zip:"96701",city:"Aiea",state:"Hawaii",abbr:"HI"},{zip:"96740",city:"Kailua-Kona",state:"Hawaii",abbr:"HI"},{zip:"96813",city:"Honolulu",state:"Hawaii",abbr:"HI"},{zip:"96815",city:"Honolulu",state:"Hawaii",abbr:"HI"},{zip:"96826",city:"Honolulu",state:"Hawaii",abbr:"HI"},
+  // Idaho
+  {zip:"83201",city:"Pocatello",state:"Idaho",abbr:"ID"},{zip:"83401",city:"Idaho Falls",state:"Idaho",abbr:"ID"},{zip:"83501",city:"Lewiston",state:"Idaho",abbr:"ID"},{zip:"83701",city:"Boise",state:"Idaho",abbr:"ID"},{zip:"83705",city:"Boise",state:"Idaho",abbr:"ID"},
+  // Illinois
+  {zip:"60601",city:"Chicago",state:"Illinois",abbr:"IL"},{zip:"60607",city:"Chicago",state:"Illinois",abbr:"IL"},{zip:"60614",city:"Chicago",state:"Illinois",abbr:"IL"},{zip:"60640",city:"Chicago",state:"Illinois",abbr:"IL"},{zip:"60901",city:"Kankakee",state:"Illinois",abbr:"IL"},{zip:"61101",city:"Rockford",state:"Illinois",abbr:"IL"},{zip:"61401",city:"Galesburg",state:"Illinois",abbr:"IL"},{zip:"61602",city:"Peoria",state:"Illinois",abbr:"IL"},{zip:"62201",city:"East Saint Louis",state:"Illinois",abbr:"IL"},{zip:"62701",city:"Springfield",state:"Illinois",abbr:"IL"},
+  // Indiana
+  {zip:"46201",city:"Indianapolis",state:"Indiana",abbr:"IN"},{zip:"46204",city:"Indianapolis",state:"Indiana",abbr:"IN"},{zip:"46401",city:"Gary",state:"Indiana",abbr:"IN"},{zip:"46601",city:"South Bend",state:"Indiana",abbr:"IN"},{zip:"46801",city:"Fort Wayne",state:"Indiana",abbr:"IN"},{zip:"47201",city:"Columbus",state:"Indiana",abbr:"IN"},{zip:"47401",city:"Bloomington",state:"Indiana",abbr:"IN"},{zip:"47701",city:"Evansville",state:"Indiana",abbr:"IN"},
+  // Iowa
+  {zip:"50301",city:"Des Moines",state:"Iowa",abbr:"IA"},{zip:"50401",city:"Mason City",state:"Iowa",abbr:"IA"},{zip:"50701",city:"Waterloo",state:"Iowa",abbr:"IA"},{zip:"52001",city:"Dubuque",state:"Iowa",abbr:"IA"},{zip:"52101",city:"Decorah",state:"Iowa",abbr:"IA"},{zip:"52401",city:"Cedar Rapids",state:"Iowa",abbr:"IA"},
+  // Kansas
+  {zip:"66101",city:"Kansas City",state:"Kansas",abbr:"KS"},{zip:"66202",city:"Mission",state:"Kansas",abbr:"KS"},{zip:"66603",city:"Topeka",state:"Kansas",abbr:"KS"},{zip:"67201",city:"Wichita",state:"Kansas",abbr:"KS"},{zip:"67501",city:"Hutchinson",state:"Kansas",abbr:"KS"},
+  // Kentucky
+  {zip:"40202",city:"Louisville",state:"Kentucky",abbr:"KY"},{zip:"40206",city:"Louisville",state:"Kentucky",abbr:"KY"},{zip:"40507",city:"Lexington",state:"Kentucky",abbr:"KY"},{zip:"41011",city:"Covington",state:"Kentucky",abbr:"KY"},{zip:"41101",city:"Ashland",state:"Kentucky",abbr:"KY"},{zip:"42001",city:"Paducah",state:"Kentucky",abbr:"KY"},
+  // Louisiana
+  {zip:"70112",city:"New Orleans",state:"Louisiana",abbr:"LA"},{zip:"70115",city:"New Orleans",state:"Louisiana",abbr:"LA"},{zip:"70301",city:"Thibodaux",state:"Louisiana",abbr:"LA"},{zip:"70501",city:"Lafayette",state:"Louisiana",abbr:"LA"},{zip:"70801",city:"Baton Rouge",state:"Louisiana",abbr:"LA"},{zip:"71101",city:"Shreveport",state:"Louisiana",abbr:"LA"},{zip:"71201",city:"Monroe",state:"Louisiana",abbr:"LA"},
+  // Maine
+  {zip:"04001",city:"Acton",state:"Maine",abbr:"ME"},{zip:"04101",city:"Portland",state:"Maine",abbr:"ME"},{zip:"04401",city:"Bangor",state:"Maine",abbr:"ME"},{zip:"04901",city:"Waterville",state:"Maine",abbr:"ME"},
+  // Maryland
+  {zip:"20601",city:"Waldorf",state:"Maryland",abbr:"MD"},{zip:"20706",city:"Lanham",state:"Maryland",abbr:"MD"},{zip:"20901",city:"Silver Spring",state:"Maryland",abbr:"MD"},{zip:"21201",city:"Baltimore",state:"Maryland",abbr:"MD"},{zip:"21210",city:"Baltimore",state:"Maryland",abbr:"MD"},{zip:"21401",city:"Annapolis",state:"Maryland",abbr:"MD"},{zip:"21701",city:"Frederick",state:"Maryland",abbr:"MD"},
+  // Massachusetts
+  {zip:"01101",city:"Springfield",state:"Massachusetts",abbr:"MA"},{zip:"01201",city:"Pittsfield",state:"Massachusetts",abbr:"MA"},{zip:"01601",city:"Worcester",state:"Massachusetts",abbr:"MA"},{zip:"02101",city:"Boston",state:"Massachusetts",abbr:"MA"},{zip:"02108",city:"Boston",state:"Massachusetts",abbr:"MA"},{zip:"02139",city:"Cambridge",state:"Massachusetts",abbr:"MA"},{zip:"02301",city:"Brockton",state:"Massachusetts",abbr:"MA"},{zip:"02601",city:"Barnstable",state:"Massachusetts",abbr:"MA"},
+  // Michigan
+  {zip:"48201",city:"Detroit",state:"Michigan",abbr:"MI"},{zip:"48207",city:"Detroit",state:"Michigan",abbr:"MI"},{zip:"48502",city:"Flint",state:"Michigan",abbr:"MI"},{zip:"48602",city:"Saginaw",state:"Michigan",abbr:"MI"},{zip:"48933",city:"Lansing",state:"Michigan",abbr:"MI"},{zip:"49201",city:"Jackson",state:"Michigan",abbr:"MI"},{zip:"49401",city:"Allendale",state:"Michigan",abbr:"MI"},{zip:"49503",city:"Grand Rapids",state:"Michigan",abbr:"MI"},
+  // Minnesota
+  {zip:"55101",city:"Saint Paul",state:"Minnesota",abbr:"MN"},{zip:"55401",city:"Minneapolis",state:"Minnesota",abbr:"MN"},{zip:"55403",city:"Minneapolis",state:"Minnesota",abbr:"MN"},{zip:"55802",city:"Duluth",state:"Minnesota",abbr:"MN"},{zip:"56001",city:"Mankato",state:"Minnesota",abbr:"MN"},{zip:"56301",city:"Saint Cloud",state:"Minnesota",abbr:"MN"},
+  // Mississippi
+  {zip:"38601",city:"Byhalia",state:"Mississippi",abbr:"MS"},{zip:"38701",city:"Greenville",state:"Mississippi",abbr:"MS"},{zip:"39201",city:"Jackson",state:"Mississippi",abbr:"MS"},{zip:"39401",city:"Hattiesburg",state:"Mississippi",abbr:"MS"},{zip:"39501",city:"Gulfport",state:"Mississippi",abbr:"MS"},
+  // Missouri
+  {zip:"63101",city:"Saint Louis",state:"Missouri",abbr:"MO"},{zip:"63108",city:"Saint Louis",state:"Missouri",abbr:"MO"},{zip:"64101",city:"Kansas City",state:"Missouri",abbr:"MO"},{zip:"64501",city:"Saint Joseph",state:"Missouri",abbr:"MO"},{zip:"65101",city:"Jefferson City",state:"Missouri",abbr:"MO"},{zip:"65201",city:"Columbia",state:"Missouri",abbr:"MO"},{zip:"65801",city:"Springfield",state:"Missouri",abbr:"MO"},
+  // Montana
+  {zip:"59001",city:"Absarokee",state:"Montana",abbr:"MT"},{zip:"59101",city:"Billings",state:"Montana",abbr:"MT"},{zip:"59401",city:"Great Falls",state:"Montana",abbr:"MT"},{zip:"59601",city:"Helena",state:"Montana",abbr:"MT"},{zip:"59801",city:"Missoula",state:"Montana",abbr:"MT"},
+  // Nebraska
+  {zip:"68101",city:"Omaha",state:"Nebraska",abbr:"NE"},{zip:"68104",city:"Omaha",state:"Nebraska",abbr:"NE"},{zip:"68501",city:"Lincoln",state:"Nebraska",abbr:"NE"},{zip:"68601",city:"Columbus",state:"Nebraska",abbr:"NE"},
+  // Nevada
+  {zip:"89101",city:"Las Vegas",state:"Nevada",abbr:"NV"},{zip:"89109",city:"Las Vegas",state:"Nevada",abbr:"NV"},{zip:"89119",city:"Las Vegas",state:"Nevada",abbr:"NV"},{zip:"89431",city:"Sparks",state:"Nevada",abbr:"NV"},{zip:"89501",city:"Reno",state:"Nevada",abbr:"NV"},{zip:"89701",city:"Carson City",state:"Nevada",abbr:"NV"},
+  // New Hampshire
+  {zip:"03038",city:"Derry",state:"New Hampshire",abbr:"NH"},{zip:"03101",city:"Manchester",state:"New Hampshire",abbr:"NH"},{zip:"03301",city:"Concord",state:"New Hampshire",abbr:"NH"},{zip:"03801",city:"Portsmouth",state:"New Hampshire",abbr:"NH"},
+  // New Jersey
+  {zip:"07001",city:"Avenel",state:"New Jersey",abbr:"NJ"},{zip:"07030",city:"Hoboken",state:"New Jersey",abbr:"NJ"},{zip:"07102",city:"Newark",state:"New Jersey",abbr:"NJ"},{zip:"07302",city:"Jersey City",state:"New Jersey",abbr:"NJ"},{zip:"07601",city:"Hackensack",state:"New Jersey",abbr:"NJ"},{zip:"08101",city:"Camden",state:"New Jersey",abbr:"NJ"},{zip:"08401",city:"Atlantic City",state:"New Jersey",abbr:"NJ"},{zip:"08608",city:"Trenton",state:"New Jersey",abbr:"NJ"},
+  // New Mexico
+  {zip:"87101",city:"Albuquerque",state:"New Mexico",abbr:"NM"},{zip:"87104",city:"Albuquerque",state:"New Mexico",abbr:"NM"},{zip:"87301",city:"Gallup",state:"New Mexico",abbr:"NM"},{zip:"87501",city:"Santa Fe",state:"New Mexico",abbr:"NM"},{zip:"88001",city:"Las Cruces",state:"New Mexico",abbr:"NM"},
+  // New York
+  {zip:"10001",city:"New York",state:"New York",abbr:"NY"},{zip:"10007",city:"New York",state:"New York",abbr:"NY"},{zip:"10036",city:"New York",state:"New York",abbr:"NY"},{zip:"10128",city:"New York",state:"New York",abbr:"NY"},{zip:"10301",city:"Staten Island",state:"New York",abbr:"NY"},{zip:"10451",city:"Bronx",state:"New York",abbr:"NY"},{zip:"11201",city:"Brooklyn",state:"New York",abbr:"NY"},{zip:"11217",city:"Brooklyn",state:"New York",abbr:"NY"},{zip:"11372",city:"Jackson Heights",state:"New York",abbr:"NY"},{zip:"11530",city:"Garden City",state:"New York",abbr:"NY"},{zip:"12201",city:"Albany",state:"New York",abbr:"NY"},{zip:"12601",city:"Poughkeepsie",state:"New York",abbr:"NY"},{zip:"13202",city:"Syracuse",state:"New York",abbr:"NY"},{zip:"14201",city:"Buffalo",state:"New York",abbr:"NY"},{zip:"14604",city:"Rochester",state:"New York",abbr:"NY"},
+  // North Carolina
+  {zip:"27101",city:"Winston-Salem",state:"North Carolina",abbr:"NC"},{zip:"27601",city:"Raleigh",state:"North Carolina",abbr:"NC"},{zip:"27701",city:"Durham",state:"North Carolina",abbr:"NC"},{zip:"28001",city:"Albemarle",state:"North Carolina",abbr:"NC"},{zip:"28202",city:"Charlotte",state:"North Carolina",abbr:"NC"},{zip:"28401",city:"Wilmington",state:"North Carolina",abbr:"NC"},{zip:"28801",city:"Asheville",state:"North Carolina",abbr:"NC"},
+  // North Dakota
+  {zip:"58101",city:"Fargo",state:"North Dakota",abbr:"ND"},{zip:"58201",city:"Grand Forks",state:"North Dakota",abbr:"ND"},{zip:"58501",city:"Bismarck",state:"North Dakota",abbr:"ND"},{zip:"58701",city:"Minot",state:"North Dakota",abbr:"ND"},
+  // Ohio
+  {zip:"43201",city:"Columbus",state:"Ohio",abbr:"OH"},{zip:"43215",city:"Columbus",state:"Ohio",abbr:"OH"},{zip:"44101",city:"Cleveland",state:"Ohio",abbr:"OH"},{zip:"44114",city:"Cleveland",state:"Ohio",abbr:"OH"},{zip:"44702",city:"Canton",state:"Ohio",abbr:"OH"},{zip:"45201",city:"Cincinnati",state:"Ohio",abbr:"OH"},{zip:"45219",city:"Cincinnati",state:"Ohio",abbr:"OH"},{zip:"45401",city:"Dayton",state:"Ohio",abbr:"OH"},{zip:"45501",city:"Springfield",state:"Ohio",abbr:"OH"},{zip:"44501",city:"Youngstown",state:"Ohio",abbr:"OH"},
+  // Oklahoma
+  {zip:"73101",city:"Oklahoma City",state:"Oklahoma",abbr:"OK"},{zip:"73104",city:"Oklahoma City",state:"Oklahoma",abbr:"OK"},{zip:"74101",city:"Tulsa",state:"Oklahoma",abbr:"OK"},{zip:"74401",city:"Muskogee",state:"Oklahoma",abbr:"OK"},{zip:"74801",city:"Shawnee",state:"Oklahoma",abbr:"OK"},
+  // Oregon
+  {zip:"97201",city:"Portland",state:"Oregon",abbr:"OR"},{zip:"97206",city:"Portland",state:"Oregon",abbr:"OR"},{zip:"97301",city:"Salem",state:"Oregon",abbr:"OR"},{zip:"97401",city:"Eugene",state:"Oregon",abbr:"OR"},{zip:"97701",city:"Bend",state:"Oregon",abbr:"OR"},{zip:"97801",city:"Pendleton",state:"Oregon",abbr:"OR"},
+  // Pennsylvania
+  {zip:"15201",city:"Pittsburgh",state:"Pennsylvania",abbr:"PA"},{zip:"15212",city:"Pittsburgh",state:"Pennsylvania",abbr:"PA"},{zip:"17101",city:"Harrisburg",state:"Pennsylvania",abbr:"PA"},{zip:"17601",city:"Lancaster",state:"Pennsylvania",abbr:"PA"},{zip:"18101",city:"Allentown",state:"Pennsylvania",abbr:"PA"},{zip:"18501",city:"Scranton",state:"Pennsylvania",abbr:"PA"},{zip:"19103",city:"Philadelphia",state:"Pennsylvania",abbr:"PA"},{zip:"19107",city:"Philadelphia",state:"Pennsylvania",abbr:"PA"},
+  // Rhode Island
+  {zip:"02840",city:"Newport",state:"Rhode Island",abbr:"RI"},{zip:"02860",city:"Pawtucket",state:"Rhode Island",abbr:"RI"},{zip:"02903",city:"Providence",state:"Rhode Island",abbr:"RI"},{zip:"02907",city:"Providence",state:"Rhode Island",abbr:"RI"},
+  // South Carolina
+  {zip:"29201",city:"Columbia",state:"South Carolina",abbr:"SC"},{zip:"29401",city:"Charleston",state:"South Carolina",abbr:"SC"},{zip:"29601",city:"Greenville",state:"South Carolina",abbr:"SC"},{zip:"29801",city:"Aiken",state:"South Carolina",abbr:"SC"},
+  // South Dakota
+  {zip:"57101",city:"Sioux Falls",state:"South Dakota",abbr:"SD"},{zip:"57201",city:"Watertown",state:"South Dakota",abbr:"SD"},{zip:"57401",city:"Aberdeen",state:"South Dakota",abbr:"SD"},{zip:"57701",city:"Rapid City",state:"South Dakota",abbr:"SD"},
+  // Tennessee
+  {zip:"37101",city:"Camden",state:"Tennessee",abbr:"TN"},{zip:"37201",city:"Nashville",state:"Tennessee",abbr:"TN"},{zip:"37402",city:"Chattanooga",state:"Tennessee",abbr:"TN"},{zip:"37601",city:"Johnson City",state:"Tennessee",abbr:"TN"},{zip:"37801",city:"Maryville",state:"Tennessee",abbr:"TN"},{zip:"38101",city:"Memphis",state:"Tennessee",abbr:"TN"},{zip:"38501",city:"Cookeville",state:"Tennessee",abbr:"TN"},
+  // Texas
+  {zip:"73301",city:"Austin",state:"Texas",abbr:"TX"},{zip:"75201",city:"Dallas",state:"Texas",abbr:"TX"},{zip:"75207",city:"Dallas",state:"Texas",abbr:"TX"},{zip:"76101",city:"Fort Worth",state:"Texas",abbr:"TX"},{zip:"77002",city:"Houston",state:"Texas",abbr:"TX"},{zip:"77010",city:"Houston",state:"Texas",abbr:"TX"},{zip:"77401",city:"Bellaire",state:"Texas",abbr:"TX"},{zip:"78201",city:"San Antonio",state:"Texas",abbr:"TX"},{zip:"78210",city:"San Antonio",state:"Texas",abbr:"TX"},{zip:"78401",city:"Corpus Christi",state:"Texas",abbr:"TX"},{zip:"78501",city:"McAllen",state:"Texas",abbr:"TX"},{zip:"79401",city:"Lubbock",state:"Texas",abbr:"TX"},{zip:"79901",city:"El Paso",state:"Texas",abbr:"TX"},
+  // Utah
+  {zip:"84101",city:"Salt Lake City",state:"Utah",abbr:"UT"},{zip:"84103",city:"Salt Lake City",state:"Utah",abbr:"UT"},{zip:"84401",city:"Ogden",state:"Utah",abbr:"UT"},{zip:"84601",city:"Provo",state:"Utah",abbr:"UT"},{zip:"84701",city:"Richfield",state:"Utah",abbr:"UT"},
+  // Vermont
+  {zip:"05001",city:"White River Junction",state:"Vermont",abbr:"VT"},{zip:"05401",city:"Burlington",state:"Vermont",abbr:"VT"},{zip:"05601",city:"Montpelier",state:"Vermont",abbr:"VT"},{zip:"05701",city:"Rutland",state:"Vermont",abbr:"VT"},
+  // Virginia
+  {zip:"20101",city:"Dulles",state:"Virginia",abbr:"VA"},{zip:"22201",city:"Arlington",state:"Virginia",abbr:"VA"},{zip:"22301",city:"Alexandria",state:"Virginia",abbr:"VA"},{zip:"23220",city:"Richmond",state:"Virginia",abbr:"VA"},{zip:"23501",city:"Norfolk",state:"Virginia",abbr:"VA"},{zip:"24011",city:"Roanoke",state:"Virginia",abbr:"VA"},{zip:"24501",city:"Lynchburg",state:"Virginia",abbr:"VA"},
+  // Washington
+  {zip:"98004",city:"Bellevue",state:"Washington",abbr:"WA"},{zip:"98101",city:"Seattle",state:"Washington",abbr:"WA"},{zip:"98109",city:"Seattle",state:"Washington",abbr:"WA"},{zip:"98201",city:"Everett",state:"Washington",abbr:"WA"},{zip:"98301",city:"Buckley",state:"Washington",abbr:"WA"},{zip:"98501",city:"Olympia",state:"Washington",abbr:"WA"},{zip:"99201",city:"Spokane",state:"Washington",abbr:"WA"},
+  // West Virginia
+  {zip:"24701",city:"Bluefield",state:"West Virginia",abbr:"WV"},{zip:"25301",city:"Charleston",state:"West Virginia",abbr:"WV"},{zip:"25401",city:"Martinsburg",state:"West Virginia",abbr:"WV"},{zip:"26101",city:"Parkersburg",state:"West Virginia",abbr:"WV"},{zip:"26505",city:"Morgantown",state:"West Virginia",abbr:"WV"},
+  // Wisconsin
+  {zip:"53201",city:"Milwaukee",state:"Wisconsin",abbr:"WI"},{zip:"53206",city:"Milwaukee",state:"Wisconsin",abbr:"WI"},{zip:"53401",city:"Racine",state:"Wisconsin",abbr:"WI"},{zip:"53701",city:"Madison",state:"Wisconsin",abbr:"WI"},{zip:"54601",city:"La Crosse",state:"Wisconsin",abbr:"WI"},{zip:"54901",city:"Oshkosh",state:"Wisconsin",abbr:"WI"},
+  // Wyoming
+  {zip:"82001",city:"Cheyenne",state:"Wyoming",abbr:"WY"},{zip:"82070",city:"Laramie",state:"Wyoming",abbr:"WY"},{zip:"82401",city:"Worland",state:"Wyoming",abbr:"WY"},{zip:"82601",city:"Casper",state:"Wyoming",abbr:"WY"},{zip:"82801",city:"Sheridan",state:"Wyoming",abbr:"WY"},
+];
+
+// Global postal codes (bonus data for global mode)
+const GLOBAL_DATA = [
+  {zip:"SW1A 1AA",city:"London",state:"England",abbr:"GB"},{zip:"EC2N 1HQ",city:"London",state:"England",abbr:"GB"},
+  {zip:"M1 1AG",city:"Manchester",state:"England",abbr:"GB"},{zip:"EH1 1YZ",city:"Edinburgh",state:"Scotland",abbr:"GB"},
+  {zip:"10115",city:"Berlin",state:"Brandenburg",abbr:"DE"},{zip:"80331",city:"Munich",state:"Bavaria",abbr:"DE"},
+  {zip:"75001",city:"Paris",state:"Île-de-France",abbr:"FR"},{zip:"69001",city:"Lyon",state:"Auvergne-Rhône-Alpes",abbr:"FR"},
+  {zip:"00100",city:"Rome",state:"Lazio",abbr:"IT"},{zip:"20121",city:"Milan",state:"Lombardy",abbr:"IT"},
+  {zip:"28001",city:"Madrid",state:"Community of Madrid",abbr:"ES"},{zip:"08001",city:"Barcelona",state:"Catalonia",abbr:"ES"},
+  {zip:"1000",city:"Brussels",state:"Brussels",abbr:"BE"},{zip:"1010",city:"Vienna",state:"Vienna",abbr:"AT"},
+  {zip:"1011",city:"Amsterdam",state:"North Holland",abbr:"NL"},{zip:"2000",city:"Antwerp",state:"Antwerp",abbr:"BE"},
+  {zip:"100-0001",city:"Tokyo",state:"Chiyoda",abbr:"JP"},{zip:"150-0001",city:"Tokyo",state:"Shibuya",abbr:"JP"},
+  {zip:"110001",city:"New Delhi",state:"Delhi",abbr:"IN"},{zip:"400001",city:"Mumbai",state:"Maharashtra",abbr:"IN"},
+  {zip:"200001",city:"Beijing",state:"Beijing",abbr:"CN"},{zip:"200002",city:"Shanghai",state:"Shanghai",abbr:"CN"},
+  {zip:"2000",city:"Sydney",state:"New South Wales",abbr:"AU"},{zip:"3000",city:"Melbourne",state:"Victoria",abbr:"AU"},
+  {zip:"M5H 2N2",city:"Toronto",state:"Ontario",abbr:"CA"},{zip:"V6C 1G8",city:"Vancouver",state:"British Columbia",abbr:"CA"},
+  {zip:"01310-100",city:"São Paulo",state:"São Paulo",abbr:"BR"},{zip:"20040-020",city:"Rio de Janeiro",state:"Rio de Janeiro",abbr:"BR"},
+];
+
+// 12-word description templates
+const DESC_TEMPLATES = [
+  (c,s) => `A well-established residential area in ${c}, known for quiet streets and friendly neighbors.`,
+  (c,s) => `Located in the heart of ${c}, ${s}, this zone has great access to local services.`,
+  (c,s) => `A growing community in ${c} with new developments and rising property values nearby.`,
+  (c,s) => `This postal area in ${c}, ${s} is served by reliable mail and shipping carriers.`,
+  (c,s) => `An active commercial and residential zone in ${c} with good transport links available.`,
+  (c,s) => `Nestled in ${c}, ${s}, this area features a mix of homes and local businesses.`,
+  (c,s) => `A vibrant part of ${c} with diverse residents, local shops, and community events nearby.`,
+  (c,s) => `One of several ZIP zones in ${c} known for convenient access to major city services.`,
+];
+
+/* ══════════════════════════════════════════
+   POPULATE STATE DROPDOWN
+══════════════════════════════════════════ */
+function populateStates() {
+  const states = [...new Set(ZIP_DATA.map(d => d.state))].sort();
+  const sel = document.getElementById('stateFilter');
+  states.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s; o.textContent = s;
+    sel.appendChild(o);
+  });
+}
+populateStates();
+
+/* ══════════════════════════════════════════
+   FAVORITES (localStorage)
+══════════════════════════════════════════ */
+function getFavs() {
+  try { return JSON.parse(localStorage.getItem('zipgen_favs') || '[]'); } catch(e){ return []; }
+}
+function saveFavs(arr) { localStorage.setItem('zipgen_favs', JSON.stringify(arr)); }
+function isFav(zip) { return getFavs().some(f => f.zip === zip); }
+function toggleFav(zip, city, state, abbr, plus4) {
+  let favs = getFavs();
+  if (isFav(zip)) {
+    favs = favs.filter(f => f.zip !== zip);
+    showToast('Removed from favorites', 'info');
+  } else {
+    favs.push({zip, city, state, abbr, plus4});
+    showToast('Saved to favorites ♥', 'success');
+  }
+  saveFavs(favs);
+  updateFavCount();
+  renderFavs();
+}
+function updateFavCount() {
+  document.getElementById('favCount').textContent = getFavs().length;
+}
+function clearFavorites() {
+  saveFavs([]);
+  updateFavCount();
+  renderFavs();
+  showToast('Favorites cleared', 'info');
+}
+function toggleFavView() {
+  const sec = document.getElementById('favSection');
+  sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+}
+function renderFavs() {
+  const favs = getFavs();
+  const sec = document.getElementById('favSection');
+  const grid = document.getElementById('favGrid');
+  if (!favs.length) { sec.style.display = 'none'; grid.innerHTML = ''; return; }
+  grid.innerHTML = favs.map((f,i) => buildCard(f.zip, f.city, f.state, f.abbr, f.plus4||'', i, true)).join('');
+}
+
+/* ══════════════════════════════════════════
+   CARD BUILDER
+══════════════════════════════════════════ */
+function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function randPad(digits) { return String(rand(0, 10**digits - 1)).padStart(digits, '0'); }
+
+function buildCard(zip, city, state, abbr, plus4, idx, isFavCard) {
+  const delay = Math.min(idx * 40, 400);
+  const desc = DESC_TEMPLATES[idx % DESC_TEMPLATES.length](city, state);
+  const favActive = isFav(zip) ? 'active' : '';
+  const countryLabel = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'].includes(abbr) ? 'USA' : abbr;
+
+  return `<div class="zip-card" style="animation-delay:${delay}ms">
+    <div class="card-top">
+      <div>
+        <div class="zip-code">${zip}</div>
+        ${plus4 ? `<div class="zip-plus4">${zip}-${plus4}</div>` : ''}
+      </div>
+      <button class="card-copy-btn" onclick="copyZip(this,'${zip}')" title="Copy ZIP code">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+    </div>
+    <div class="zip-location">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2"/></svg>
+      ${city}, ${abbr} · ${countryLabel}
+    </div>
+    <div class="zip-desc">${desc}</div>
+    ${isFavCard ? '' : `<button class="zip-fav ${favActive}" onclick="toggleFav('${zip}','${city}','${state}','${abbr}','${plus4}')" title="Save to favorites">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </button>`}
+  </div>`;
+}
+
+/* ══════════════════════════════════════════
+   GENERATE
+══════════════════════════════════════════ */
+let lastResults = [];
+
+function generate() {
+  const countRaw = parseInt(document.getElementById('countInput').value) || 1;
+  const count = Math.max(1, Math.min(100, countRaw));
+  document.getElementById('countInput').value = count;
+
+  const stateFilter = document.getElementById('stateFilter').value;
+  const globalMode = document.getElementById('globalToggle').checked;
+  const plus4Mode = document.getElementById('plus4Toggle').checked;
+
+  // Show loading
+  const btn = document.getElementById('generateBtn');
+  btn.classList.add('loading');
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('results-section').style.display = 'none';
+
+  const grid = document.getElementById('zipGrid');
+  grid.innerHTML = Array(Math.min(count,6)).fill(0).map(() =>
+    `<div class="skel-card skeleton"></div>`).join('');
+  document.getElementById('results-section').style.display = 'block';
+
+  setTimeout(() => {
+    let pool = globalMode ? [...ZIP_DATA, ...GLOBAL_DATA] : [...ZIP_DATA];
+    if (stateFilter) pool = pool.filter(d => d.state === stateFilter);
+    if (!pool.length) pool = ZIP_DATA;
+
+    // Shuffle and pick
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    const picked = [];
+    for (let i = 0; i < count; i++) picked.push(pool[i % pool.length]);
+
+    lastResults = picked.map(d => ({
+      zip: d.zip, city: d.city, state: d.state, abbr: d.abbr,
+      plus4: plus4Mode ? randPad(4) : ''
+    }));
+
+    grid.innerHTML = lastResults.map((r, i) => buildCard(r.zip, r.city, r.state, r.abbr, r.plus4, i, false)).join('');
+    document.getElementById('resultCount').textContent = count;
+    btn.classList.remove('loading');
+    updateFavCount();
+    renderFavs();
+
+    // Scroll
+    document.getElementById('results-section').scrollIntoView({behavior:'smooth', block:'start'});
+  }, 500);
+}
+
+/* ══════════════════════════════════════════
+   COPY / DOWNLOAD
+══════════════════════════════════════════ */
+function copyZip(btn, zip) {
+  navigator.clipboard.writeText(zip).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>`;
+    showToast(`Copied ${zip}`, 'success');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+    }, 2000);
+  });
+}
+
+function copyAll() {
+  if (!lastResults.length) { showToast('Generate ZIP codes first', 'info'); return; }
+  const text = lastResults.map(r => {
+    let line = `${r.zip} | ${r.city}, ${r.abbr}`;
+    if (r.plus4) line += ` | ZIP+4: ${r.zip}-${r.plus4}`;
+    return line;
+  }).join('\n');
+  navigator.clipboard.writeText(text).then(() => showToast(`Copied ${lastResults.length} ZIP codes`, 'success'));
+}
+
+function downloadTxt() {
+  if (!lastResults.length) { showToast('Generate ZIP codes first', 'info'); return; }
+  const lines = [
+    'Random ZIP Codes – Generated by ZIPGen',
+    `Date: ${new Date().toLocaleDateString()}`,
+    '─'.repeat(40),
+    '',
+    ...lastResults.map((r,i) => {
+      const desc = DESC_TEMPLATES[i % DESC_TEMPLATES.length](r.city, r.state);
+      let line = `${r.zip} | ${r.city}, ${r.state} (${r.abbr})`;
+      if (r.plus4) line += ` | ZIP+4: ${r.zip}-${r.plus4}`;
+      line += `\n  ${desc}`;
+      return line;
+    })
+  ];
+  const blob = new Blob([lines.join('\n')], {type: 'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'zip-codes.txt'; a.click();
+  URL.revokeObjectURL(url);
+  showToast('Downloaded zip-codes.txt', 'success');
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+function showToast(msg, type='success') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  const icon = type === 'success' ? '✓' : 'i';
+  t.innerHTML = `<div class="toast-icon ${type}">${icon}</div>${msg}`;
+  c.appendChild(t);
+  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300); }, 2500);
+}
+
+/* ══════════════════════════════════════════
+   DARK MODE
+══════════════════════════════════════════ */
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+const sunPath = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+const moonPath = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+
+function applyTheme(dark) {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+  themeIcon.innerHTML = dark ? sunPath : moonPath;
+  localStorage.setItem('zipgen_theme', dark ? 'dark' : 'light');
+}
+themeToggle.addEventListener('click', () => {
+  applyTheme(document.documentElement.getAttribute('data-theme') !== 'dark');
+});
+// Load saved theme
+if (localStorage.getItem('zipgen_theme') === 'dark' ||
+    (!localStorage.getItem('zipgen_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  applyTheme(true);
+}
+
+/* ══════════════════════════════════════════
+   FAQ ACCORDION
+══════════════════════════════════════════ */
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+updateFavCount();
+renderFavs();
+</script>
+</body>
+</html>
